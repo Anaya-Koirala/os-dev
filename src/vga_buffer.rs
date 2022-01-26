@@ -3,10 +3,52 @@ use lazy_static::lazy_static;
 use volatile::Volatile;
 use spin::Mutex;
 
+
+lazy_static!{
+    pub static ref BLUE: Mutex<Writer> = Mutex::new(Writer {
+        column_position: 0,
+        color_code: ColorCode::new(Color::LightBlue, Color::Black),
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+    });
+}
+
+lazy_static!{
+    pub static ref CYAN: Mutex<Writer> = Mutex::new(Writer {
+        column_position: 0,
+        color_code: ColorCode::new(Color::Cyan, Color::Black),
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+    });
+}
+
+lazy_static!{
+    pub static ref PINK: Mutex<Writer> = Mutex::new(Writer {
+        column_position: 0,
+        color_code: ColorCode::new(Color::Pink, Color::Black),
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+    });
+}
+
+lazy_static!{   
+    pub static ref MAGENTA: Mutex<Writer> = Mutex::new(Writer {
+        column_position: 0,
+        color_code: ColorCode::new(Color::Magenta, Color::Black),
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+    });
+}
+
+lazy_static!{
+    pub static ref BROWN: Mutex<Writer> = Mutex::new(Writer {
+        column_position: 0,
+        color_code: ColorCode::new(Color::Brown, Color::Black),
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+    });
+}
+
+
 lazy_static!{
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
         column_position: 0,
-        color_code: ColorCode::new(Color::White, Color::Black),
+        color_code: ColorCode::new(Color::LightGray, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     });
 }
@@ -167,37 +209,97 @@ pub fn _print(args: fmt::Arguments) {
 
 
 #[macro_export]
-macro_rules! red_print {
+macro_rules! error {
     
-    ($($arg:tt)*) => ($crate::vga_buffer::_red_print(format_args!($($arg)*)));
+    ($($arg:tt)*) => ($crate::vga_buffer::_error(format_args!($($arg)*)));
 }
 
 #[doc(hidden)]
-pub fn _red_print(args: fmt::Arguments){
+pub fn _error(args: fmt::Arguments){
     use core::fmt::Write;
     RED.lock().write_fmt(args).unwrap();
 }
 
 #[macro_export]
-macro_rules! green_print {
+macro_rules! success {
     
-    ($($arg:tt)*) => ($crate::vga_buffer::_green_print(format_args!($($arg)*)));
+    ($($arg:tt)*) => ($crate::vga_buffer::_success(format_args!($($arg)*)));
 }
 
 #[doc(hidden)]
-pub fn _green_print(args: fmt::Arguments){
+pub fn _success(args: fmt::Arguments){
     use core::fmt::Write;
     GREEN.lock().write_fmt(args).unwrap();
 }
 
 #[macro_export]
-macro_rules! yellow_print {
+macro_rules! warn {
     
-    ($($arg:tt)*) => ($crate::vga_buffer::_yellow_print(format_args!($($arg)*)));
+    ($($arg:tt)*) => ($crate::vga_buffer::warn(format_args!($($arg)*)));
 }
 
 #[doc(hidden)]
-pub fn _yellow_print(args: fmt::Arguments){
+pub fn _warn(args: fmt::Arguments){
     use core::fmt::Write;
     YELLOW.lock().write_fmt(args).unwrap();
+}
+
+#[macro_export]
+macro_rules! blue_print {
+    
+    ($($arg:tt)*) => ($crate::vga_buffer::_blue_print(format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _blue_print(args: fmt::Arguments){
+    use core::fmt::Write;
+    BLUE.lock().write_fmt(args).unwrap();
+}
+
+#[macro_export]
+macro_rules! cyan_print {
+    
+    ($($arg:tt)*) => ($crate::vga_buffer::_cyan_print(format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _cyan_print(args: fmt::Arguments){
+    use core::fmt::Write;
+    CYAN.lock().write_fmt(args).unwrap();
+}
+
+#[macro_export]
+macro_rules! magenta_print {
+    
+    ($($arg:tt)*) => ($crate::vga_buffer::_magenta_print(format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _magenta_print(args: fmt::Arguments){
+    use core::fmt::Write;
+    MAGENTA.lock().write_fmt(args).unwrap();
+}
+
+#[macro_export]
+macro_rules! brown_print {
+    
+    ($($arg:tt)*) => ($crate::vga_buffer::_brown_print(format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _brown_print(args: fmt::Arguments){
+    use core::fmt::Write;
+    BROWN.lock().write_fmt(args).unwrap();
+}
+
+#[macro_export]
+macro_rules! pink_print {
+    
+    ($($arg:tt)*) => ($crate::vga_buffer::_pink_print(format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _pink_print(args: fmt::Arguments){
+    use core::fmt::Write;
+    PINK.lock().write_fmt(args).unwrap();
 }
